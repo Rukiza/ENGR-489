@@ -1,0 +1,75 @@
+\chapter{Background}\label{C:bg}
+
+%%This chapter covers Web Assembly and briefly covers Whiley along with its intermediary language WyIL.
+
+\section{Web Assembly}
+
+%%This section covers the history of Web Assembly, the current design and future plans for the language.
+
+Web Assembly is being developed by a W3C community group with members from large organisations like Google, Microsoft and Mozilla \cite{8_wagner_2016}. Their aim for the project is to develop a load time efficient binary format for the web. Wasm should be able to run at native speed and could be used for a compile target for other languages \cite{8_wagner_2016}. The project has three stages of development MVP, after MVP and Future Plans. Currently the project is  at the end of MVP. The latest milestone in the MVP to be completed is that Web Assembly will now run in multiple experimental browsers \cite{8_wagner_2016}\cite{7_zhu_2016} for example FireFox Nightly. The Web Assembly development process was made public on the 17th of June, 2015 \cite{6_bastien_2016}. 
+
+\subsection{Design}\label{subsec:wad}
+
+Web Assembly has some imported design features that make it different from other assembly languages. First it is structured in a tree format \cite{10_gohman_bastien_wagner_2016}, this format can be seen in figure \ref{fig:wasm}. Each node depending on its type may have 0 or N children nodes. Tied in with this is the implementation of branching. In Web Assembly you can only branch up into a node of which you are a descendent. This combined with the constructs of the language that represent loop and if statements \cite{11_webassembly/spec_2016}, means the language has a structured control flow. Due to this each path through the tree can be evaluated to check if it returns values. This has meant that testing is easier as it ensures that sections of code must be deamed unreachable if no value is returned on that path. 
+
+%Need to trim the wasm file to make it smaller and simpler.
+\begin{figure}[H]
+  \centering
+  \lstinputlisting[frame=L, basicstyle=\footnotesize\ttfamily]{wasm.wast}
+  \caption{Example Web Assembly}
+  \label{fig:wasm}
+\end{figure}
+
+\paragraph{}
+
+%Need a better way to say this.
+Web Assembly does not have a stack or a limited amount registers. Wasm has "locals" similar to registers but with type information associated. These locals need to be created at the start of each function. When created local do not take up memory space on the heap. You can see in the figure above the all locals need to be created at the start of each function.
+
+\subsection{Future Plans}\label{subsec:wafp}
+
+The future plan for Web Assembly, after MVP, is to implement a garbage collector. This will means that there is going to be a implementation of reference types for the heap \cite{5_gohman_wagner_bastien_2016}. As well as allowing for interaction with the DOM and other web API functionality \cite{5_gohman_wagner_bastien_2016}. With that JavaScript would also be able to called from with Web Assembly. Other areas to be looked into will be Threading, by implementing shared memory, atomics and futexes (A fast user space Mutex)\cite{12_bastien_wagner_gohman_2016}.
+
+\section{Whiley and WyIL}
+
+This section will cover a brief look at Whiley and a closer look at WyIL, Whiley's intermediary language.
+
+\subsection{Whiley}\label{subsec:wy}
+Whiley is a programming language developed in Victora University of Wellington's Software Engineering Department by David Pearce. The aims of this language are to reduce software failures by reducing program bugs \cite{2_pearce_2016}. This is facilitated through extended static checking \cite{2_pearce_2016} about pre and post condition within the language. Some of the errors that can be caught at compile time are divide-by-zero, array out of bounds and null dereference\cite{2_pearce_2016}.
+%Need to ad more in and make it sound less bad.
+
+\paragraph{}
+%Cover more about Whiley types.
+The semantics of Whiley are value semantics. This means that when an array is assigned to a new variable. These variables are then pointing to two different arrays. Values semantics are applied to every type in Whiley. However there is an option to specify the use of reference semantics. When modifying an array or record in Whiley you know if its possible that this change will affect other areas. This is an important feature then developing errorless code.%Remove last statement as there is no evedence provide about this.
+
+\paragraph{}
+Whiley's type system has basic types like int, bool and array, as well as more advance types Unions and Recursive types. An example of union types is featured bellow.
+%Look at the quoted example and label the types.
+\begin{figure}[H]
+  \centering
+  \lstinputlisting[frame=L, basicstyle=\footnotesize\ttfamily]{union-example.whiley}
+  \caption{Example of Union types}
+  \label{fig:whiley}
+\end{figure}
+
+%Add some more discution about the above data.
+
+\subsection{WyIL}
+
+WyIL is Whileys intermediary language. Whiley's source is compiled into this before being targeted to any specific compile target for example Java bytecode. WyIL is a simi-structured language \cite{1_pearce_2016} which means, that loops and if statements have been flattened out and implemented with labels and goto statements. Instructions in WyIL are register based bytecodes \cite{1_pearce_2016} rather than stack based. This makes it easier when compiling to Web Assembly as it has similar syntax, see section \ref{subsec:wad}. The advantages of using WyIL over Whiley source to compile from are all types and names have been resolved \cite{1_pearce_2016} as well as verification.
+
+\paragraph{}
+Taking WyIL and transforming it to another language is easier to do than with Whiley itself. This is because the individual statements are closer to assembly language statements. Statements from Whiley have already been expanded from one line to two lines plus. This can featured in the example below.  
+
+\paragraph{}
+
+\begin{figure}[H]
+  \centering
+  \lstinputlisting[frame=L, basicstyle=\footnotesize\ttfamily]{union-example.wyil_text}
+  \caption{WyIL text representation}
+  \label{fig:wyil}
+\end{figure}
+
+%Discution about the implementation needs to be expanded.
+Each statement in WyIl stores type infromation. This information is for keeping the integrity of the type system.
+
+

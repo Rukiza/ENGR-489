@@ -1,0 +1,28 @@
+\chapter{Future Work}\label{fw}
+
+\section{Evaluation}
+
+Currently there are three possible ways of evaluating the Whiley-to-WebAssembly translator. The first is to use various benchmarking tools to evaluate the language running with David's pre-made programs in Whiley. The second is to look at the test suite and look at the number of tests that are passing for what reason. For those that are failing, look at why they are failing. Last do a comparison of both Whiley-to-WebAssembly and Whiley-to-JavaScript is required. Whiley-to-JavaScript was made last year as an honors project (cite whose). A comparison of the two will show important differences between JavaScript and Web Assembly, while noting that implementation of compiler must be taken into account.
+
+\section{Functionality}
+
+Functionality that is still required in the compiler step is as follows. 
+
+\paragraph{}
+More work needs to be done on reference types. The reference types are currently unable to access reference. Update has a similar issue.  Deep copying has a function for handling this but it is not used in all required places. Mixing of access between arrays and records accesses needs work as well. 
+
+\paragraph{}
+WyIL operations need to be implemented such as Array Generators and Quantify statements. Along with those is the requirement for reference semantics and byte types to be implemented. The time required to do all of the above implementations, should not be long as they are based on other work or in the case of reference semantics the removal of previous work in this special case.
+
+\paragraph{}
+Type checking still needs to be implemented. There is currently a way of checking the type of any variable as mentioned in \ref{subsec:didcs}. Cast and ifis statements are not implemented, this is the first step in being able to implement Whiley's union types. More work also needs to be put in around handling subtyping based on the information from the implemented type system.
+
+\section{Performance Improvements}
+
+Performance can be improved by implementing the following improvements.
+
+\paragraph{}
+Reference counting can be used for improving memory management above its current capabilities. This is because each reference variable needs to point to a different place in memory. This includes when no modification will ever be made to the reference location of both the copied and original memory. If reference counting was used, the copying of memory would be put off until the point when modification is planned. The reference counter would be checked, if it was larger than one, then decrease the counter, copy the memory, then modify, otherwise just modify.
+
+
+

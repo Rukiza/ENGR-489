@@ -1,0 +1,87 @@
+\chapter{Evaluation}\label{C:t}
+
+This chapter covers the testing framework, what current testing has come up with and the development work flow of the project.
+
+\section{Testing Framework}
+
+Testing of the project is done by loading in a large amount of existing test files used for testing the Whiley Compiler and constructing a test case for each file. These files are then run through the Whiley to Web Assembly compilation step with the output of a test.wast file. This file has testing commands appended to it and is then run through the Web Assembly Interpreter. %%Cite Interprotor location
+The returned value from this is then used to confirm if the test passed or failed. If the test fails debugging information of failure step is reported to the console. Each test file represents an aspect of Whiley's syntax or more than one.  
+
+\section{Testing Outcomes}
+
+To date 440 tests have been completed with 241 tests passing. The tests that are not passing are either related to the functionality that is not being implemented, or are not implemented yet. Array and record access is fully implemented for access at any depth. Test failures come in three different forms, unimplemented functionality, errors in Java code and errors in compiler output.
+
+\subsection{Unimplemented Functionality}
+
+The amount of test that fail due to unimplemented functionality is the largest section of tests. %%TO ADD.
+This is by far the largest section of failed tests. Below in \ref{fig:table1} table you can see the unimplemented functionality and there associated failed tests. 
+
+\begin{figure}[H]
+  \centering
+  \begin{tabular}{| l || r |}
+  \hline
+  Null Type & 0 \\ \hline
+  Byte Type & 0 \\ \hline
+  Lambda & 0 \\ \hline
+  References & 0 \\ \hline
+  Negation Type & 0 \\ \hline
+  Open Record & 0 \\ \hline
+  Recursive Type & 0 \\ \hline
+  Convert Statement& 0 \\ \hline
+  IfIs Statement & 0 \\ 
+  \hline
+  \end{tabular}
+  \caption{Unimplemented functionality and associated number tests.}
+  \label{fig:table1}
+\end{figure}
+
+Types not implemented makes up most of the failed tests from this subsection. Types such as Null and Byte should be simple to add except for the added complication in the case of Null where it needs to be handled appropriately in if statements because the value store within does not matter just the type value does.%%TODO add example of null in image of handling in if statement.
+Lambda and Recursive types and Convert Statements have not work explicitly, so to get them working the full amount of time will need to be spent working on them. IsIf statements are going to be complicated to implement as currently no sub-typing is being explicitly taken into account. That means when sub-typing the current way of typing needs to be changed or reimplemented. An example of the current typing can be seen %% Link to example.
+. 
+References should be easy to add in as the underling structure of both Records and Arrays is built on the idea of using references this can be seen in %% Example here.
+. %% Todo add explanation of Refrences or link to one.
+
+\subsection{Bugs}
+
+%%Coding ... Testing 
+
+Program errors produce the lest amount of errors although there is possibility of crossover into compiler errors. The table below \ref{fig:table2} shows problems with programming related errors and the amount of tests associated with them.
+
+\begin{figure}[H]
+  \centering
+  \begin{tabular}{| l || r |}
+  \hline
+  Number formatting exception & 0 \\ \hline
+  Infinite loop & 0\\ \hline
+  \hline
+  \end{tabular}
+  \caption{Program errors and associated number tests}
+  \label{fig:table2}
+\end{figure}
+
+Number formatting exception are happening due to the use of "Integer(String)" constructor when getting the type for integers constants. This problem is interesting due to the fact that for most number parsing works fine. Only for a small amount of constants does the problem happen and when it does the string contains numbers as expected, well under the max integer range. %%Todo add more information about the error. 
+
+
+\subsection{Know Features}
+
+%% Things not fully implemented.
+\begin{figure}[H]
+  \centering
+  \begin{tabular}{| l || r |}
+  \hline
+  If Statement & 0 \\
+  Class cast exception & 0 \\ \hline 
+  \hline
+  \end{tabular}
+  \caption{Program errors and associated number tests}
+  \label{fig:table2}
+\end{figure}
+
+If statements have the problem where they do not take into account all possible uses. For example when a record contains a array the if statement will not handle the array appropriately. It will look at the contents of the record and compare the pointers of the arrays with each other and not the contents. This is not the intended purpose, step need to be taken to have better handling of both arrays and records. The simplest option is to move array and record checking to a function that is called at run time, or extensive work on the current append in-line if statement. 
+When new objects are made in Whiley and that object is updated at any point in code, a class cast exception will be thrown during compilation. New object are in the case of Whiley are a pointer to a initialized record. They way this is implemented in WyIL uses a different type for updating records or pointers to records and this is not taken into account. 
+
+\section{Results}
+
+
+
+

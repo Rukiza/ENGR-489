@@ -1,0 +1,11 @@
+\chapter{Introduction}\label{C:intro}
+
+\section{The Context}
+Whiley is a programming language that mixes features from object orientated and functional languages. The aim of Whiley is to offer programmers language level code verification. Due to software failures being able to prove aspects of a program are important. This is no less true when developing for the web. With web based applications handling security and monetary transactions. Being able to prove that these types of program are working as intended is important. (Need to add more.)
+
+\section{The Opportunity}
+With the introduction of Web Assembly (wasm), a fast efficient binary format for the web, Whiley has a new compile target. Work has been done previously to compile Whiley to both JavaScript and ASM.js. While both languages work on the web, neither are assembly languages. Now Whiley has a language on the web specificity made to be compiled too. (Need to add more.)
+
+\section{Current Status}
+The Whiley-to-WebAssembly translator is the step between Whiley's intermediary language (WyIL) and Web Assembly. Currently an WyIL file is passed to an Java implementation of a the translator which then parses it. The parsing creates an absract syntax tree of the file in wasm. That tree can then be written as a wasm file. With that Whiley applications can be run in browsers made by Google, Mozilla, and Microsoft \cite{8_wagner_2016}. To ensure that those files when created run correctly a test harness has been set up. There are 440 test (from the Whiley test suite) that are run, of which 191 pass (Need to change to be more accurate). All the basic types are working along with types like arrays.
+
