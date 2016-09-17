@@ -1,0 +1,19 @@
+private function indexOf(int[], int) -> (null|int):
+body: 
+    const %4 = 0 : int                      
+    assign %3 = %4  : int                   
+    loop (%3, %5, %6, %7, %8)               
+        lengthof %5 = %0 : int[]                
+        ifge %3, %5 goto label0 : int           
+        indexof %6 = %0, %3 : int[]             
+        ifne %6, %1 goto label1 : int           
+        return %3                               
+    .label1                                 
+        const %7 = 1 : int                      
+        add %8 = %3, %7 : int                   
+        assign %3 = %8  : int                   
+.label0                                 
+    const %9 = null : null                  
+    return %9                               
+    return                                  
+

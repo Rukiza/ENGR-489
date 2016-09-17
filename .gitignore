@@ -1,0 +1,11 @@
+*.pdf
+*.aux
+*.log
+.DS_STORE
+*.eps
+*.blg
+*.dvi
+*.lof
+*.toc
+*.bbl
+*.gz

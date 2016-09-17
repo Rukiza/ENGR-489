@@ -1,0 +1,10 @@
+private function f(int) -> (int):
+body: 
+    const %2 = 0 : int                      
+    ifle %0, %2 goto label0 : int           
+    return %0                               
+.label0                                 
+    const %3 = 0 : int                      
+    return %3                               
+    return                                  
+
