@@ -35,7 +35,7 @@ This is by far the largest section of failed tests. Below in \ref{fig:table1} ta
   \label{fig:table1}
 \end{figure}
 
-Types not implemented makes up most of the failed tests from this subsection. Types such as Null and Byte should be simple to add except for the added complication in the case of Null where it needs to be handled appropriately in if statements because the value store within does not matter just the type value does.%%TODO add example of null in image of handling in if statement.
+Types not implemented makes up most of the failed tests from this subsection. Types such as Null and Byte should be simple to add except for the added complication in the case of Null where it needs to be handled appropriately in if statements because the value store within does not matter just the type value does. %%TODO add example of null in image of handling in if statement.
 Lambda and Recursive types and Convert Statements have not work explicitly, so to get them working the full amount of time will need to be spent working on them. IsIf statements are going to be complicated to implement as currently no sub-typing is being explicitly taken into account. That means when sub-typing the current way of typing needs to be changed or reimplemented. An example of the current typing can be seen %% Link to example.
 . 
 References should be easy to add in as the underling structure of both Records and Arrays is built on the idea of using references this can be seen in %% Example here.
@@ -60,7 +60,13 @@ Program errors produce the lest amount of errors although there is possibility o
 \end{figure}
 
 Number formatting exception are happening due to the use of "Integer(String)" constructor when getting the type for integers constants. This problem is interesting due to the fact that for most number parsing works fine. Only for a small amount of constants does the problem happen and when it does the string contains numbers as expected, well under the max integer range. %%Todo add more information about the error. 
+Infinite loop happens in only a single test, this test contains open records. Open records are records that (best guess)defines a section that is set and the section that can be anything and example can be seen bellow(Todo), this is not handled as such the compiled wast goes into a infinite loop trying to handle them. This is the best guess as to what is happening due to the current lack of debugging tools when working with Web Assembly.
 
+\begin{figure}[H]
+  \centering
+  \caption{Example of a open record}
+  \label{fig:table2}
+\end{figure}
 
 \subsection{Know Features}
 
@@ -78,10 +84,12 @@ Number formatting exception are happening due to the use of "Integer(String)" co
 \end{figure}
 
 If statements have the problem where they do not take into account all possible uses. For example when a record contains a array the if statement will not handle the array appropriately. It will look at the contents of the record and compare the pointers of the arrays with each other and not the contents. This is not the intended purpose, step need to be taken to have better handling of both arrays and records. The simplest option is to move array and record checking to a function that is called at run time, or extensive work on the current append in-line if statement. 
-When new objects are made in Whiley and that object is updated at any point in code, a class cast exception will be thrown during compilation. New object are in the case of Whiley are a pointer to a initialized record. They way this is implemented in WyIL uses a different type for updating records or pointers to records and this is not taken into account. 
+When new objects are made in Whiley and that object is updated at any point in code, a class cast exception will be thrown during compilation. New object are in the case of Whiley are a pointer to a initialized record. They way this is implemented in WyIL uses a different type for updating records or pointers to records and this is not taken into account in the update handling method.  
 
 \section{Results}
 
+\subsection{•}
 
+\subsection{Result Discussion}
 
 
