@@ -4,17 +4,15 @@ This chapter covers the testing framework, what current testing has come up with
 
 \section{Testing Framework}
 
-Testing of the project is done by loading in a large amount of existing test files used for testing the Whiley Compiler and constructing a test case for each file. These files are then run through the Whiley to Web Assembly compilation step with the output of a test.wast file. This file has testing commands appended to it and is then run through the Web Assembly Interpreter. %%Cite Interprotor location
-The returned value from this is then used to confirm if the test passed or failed. If the test fails debugging information of failure step is reported to the console. Each test file represents an aspect of Whiley's syntax or more than one.  
+The Whiley compiler includes 440 end to end tests. Each tests case consists of a Whiley file that is valid which contain assertions to assert correctness. Each assersion verifies aspects of the Whiley language. Testing of the project is done by loading in the test files and constructing a test case for each file. These files are then run through the Whiley to Web Assembly compilation step with the output of a test.wast file. This file has testing commands appended to it and is then run through the Web Assembly Interpreter. The interpretor confirms correctness of the compiled tests by running append tests commands and outputting a pass result or failure with reasons.%%Cite Interprotor location
+The returned value from the interpreter is then used to confirm if the test passed or failed. If the test fails debugging information of failure step is reported to the console. These tests provide a benchmark related to the coverage of the Whiley to Web Assembly compilation step.  
 
-\section{Testing Outcomes}
-
-To date 440 tests have been completed with 241 tests passing. The tests that are not passing are either related to the functionality that is not being implemented, or are not implemented yet. Array and record access is fully implemented for access at any depth. Test failures come in three different forms, unimplemented functionality, errors in Java code and errors in compiler output.
+Current testing shows that out of the 440 there is 241 tests passing. The tests that failed have three reasons for failing, that are either unimplemented, bugs, or known features. Each test failure has been looked through and codified and divided up into three overarching failure types with more specific reasons for failure.
 
 \subsection{Unimplemented Functionality}
 
-The amount of test that fail due to unimplemented functionality is the largest section of tests. %%TO ADD.
-This is by far the largest section of failed tests. Below in \ref{fig:table1} table you can see the unimplemented functionality and there associated failed tests. 
+The amount of test that fail due to unimplemented functionality is the largest section of tests. %%TO ADD. 
+Below in Table \ref{fig:table1} you can see the unimplemented functionality and there associated failed tests. 
 
 \begin{figure}[H]
   \centering
@@ -31,12 +29,12 @@ This is by far the largest section of failed tests. Below in \ref{fig:table1} ta
   IfIs Statement & 0 \\ 
   \hline
   \end{tabular}
-  \caption{Unimplemented functionality and associated number tests.}
+  \caption{Unimplemented functionality and associated test numbers.}
   \label{fig:table1}
 \end{figure}
 
-Types not implemented makes up most of the failed tests from this subsection. Types such as Null and Byte should be simple to add except for the added complication in the case of Null where it needs to be handled appropriately in if statements because the value store within does not matter just the type value does. %%TODO add example of null in image of handling in if statement.
-Lambda and Recursive types and Convert Statements have not work explicitly, so to get them working the full amount of time will need to be spent working on them. IsIf statements are going to be complicated to implement as currently no sub-typing is being explicitly taken into account. That means when sub-typing the current way of typing needs to be changed or reimplemented. An example of the current typing can be seen %% Link to example.
+Types not implemented make up most of the failed tests from this subsection. Types such as Null and Byte should be simple to add except for the added complication in the case of Null where it needs to be handled appropriately. %%TODO add example of null in image of handling in if statement.
+No effort has been put in to implement lambda functions and recursive types and convert bytecode/casting. Therefore, it remains uncertain how lon git would take to add these features. IsIf bytecode is the runtime type testing bytecode, a simple type system has been added but no effort has been made to make use of it in relation to the IsIf bytecode.  As such it will be difficult to implement IsIF as there is currently no sub-typing explicitly being taken into account. An example of the current typing can be seen %% Link to example.
 . 
 References should be easy to add in as the underling structure of both Records and Arrays is built on the idea of using references this can be seen in %% Example here.
 . %% Todo add explanation of Refrences or link to one.
@@ -45,7 +43,7 @@ References should be easy to add in as the underling structure of both Records a
 
 %%Coding ... Testing 
 
-Program errors produce the lest amount of errors although there is possibility of crossover into compiler errors. The table below \ref{fig:table2} shows problems with programming related errors and the amount of tests associated with them.
+Program errors produce the lest amount of errors although there is possibility of crossover into compiler errors. The Table \ref{fig:table2} (Bellow) shows problems with programming related errors and the amount of tests associated with them.
 
 \begin{figure}[H]
   \centering
@@ -55,12 +53,12 @@ Program errors produce the lest amount of errors although there is possibility o
   Infinite loop & 0\\ \hline
   \hline
   \end{tabular}
-  \caption{Program errors and associated number tests}
+  \caption{Program errors and associated test numbers}
   \label{fig:table2}
 \end{figure}
 
-Number formatting exception are happening due to the use of "Integer(String)" constructor when getting the type for integers constants. This problem is interesting due to the fact that for most number parsing works fine. Only for a small amount of constants does the problem happen and when it does the string contains numbers as expected, well under the max integer range. %%Todo add more information about the error. 
-Infinite loop happens in only a single test, this test contains open records. Open records are records that (best guess)defines a section that is set and the section that can be anything and example can be seen bellow(Todo), this is not handled as such the compiled wast goes into a infinite loop trying to handle them. This is the best guess as to what is happening due to the current lack of debugging tools when working with Web Assembly.
+Number formatting exception are happening due to the use of "Integer(String)" constructor when getting the type for integers constants. This problem is interesting due to the fact that for most number parsing works fine. Only for a small amount of constants does the problem happen and when it does the string contains numbers as expected, well under the max integer range. This problem requires more investigation to find out the cause.%%Todo add more information about the error. 
+Infinite loop happens in only a single test, this test contains open records. This feature is not implemented and for an unknown reason goes into a infinite loop.
 
 \begin{figure}[H]
   \centering
@@ -68,27 +66,30 @@ Infinite loop happens in only a single test, this test contains open records. Op
   \label{fig:table2}
 \end{figure}
 
-\subsection{Know Features}
+\subsection{Known Features}
+This section contains test that fail with reasons that are known. If statement because it is poorly implemented and Class cast exception because of known unimplemented functionality.
 
 %% Things not fully implemented.
 \begin{figure}[H]
   \centering
   \begin{tabular}{| l || r |}
   \hline
-  If Statement & 0 \\
+  IfEq Bytecode & 0 \\
   Class cast exception & 0 \\ \hline 
   \hline
   \end{tabular}
-  \caption{Program errors and associated number tests}
+  \caption{Program errors and associated test numbers}
   \label{fig:table2}
 \end{figure}
 
-If statements have the problem where they do not take into account all possible uses. For example when a record contains a array the if statement will not handle the array appropriately. It will look at the contents of the record and compare the pointers of the arrays with each other and not the contents. This is not the intended purpose, step need to be taken to have better handling of both arrays and records. The simplest option is to move array and record checking to a function that is called at run time, or extensive work on the current append in-line if statement. 
+The IfEq bytecode implementation has the problem where they do not take into account all possible uses. For example when a record contains an array, the implemented IfEq bytecode will not handle the array appropriately. It will look at the contents of the record and compare the pointers of the arrays with each other and not the contents. This is not the intended purpose, step need to be taken to have better handling of both arrays and records. The simplest option is to move array and record checking to a function that is called at run time, or extensive work on the current append in-line method. 
 When new objects are made in Whiley and that object is updated at any point in code, a class cast exception will be thrown during compilation. New object are in the case of Whiley are a pointer to a initialized record. They way this is implemented in WyIL uses a different type for updating records or pointers to records and this is not taken into account in the update handling method.  
 
 \section{Results}
 
-\subsection{•}
+\subsection{Benchmarking}
+
+\subsection{Results and Graphs}
 
 \subsection{Result Discussion}
 

@@ -6,7 +6,7 @@
 
 %%This section covers the history of Web Assembly, the current design and future plans for the language.
 
-Web Assembly is being developed by a W3C community group with members from large organisations like Google, Microsoft and Mozilla \cite{8_wagner_2016}. Their aim for the project is to develop a load time efficient binary format for the web. Wasm should be able to run at native speed and could be used for a compile target for other languages \cite{8_wagner_2016}. The project has three stages of development MVP, after MVP and Future Plans. Currently the project is  at the end of MVP. The latest milestone in the MVP to be completed is that Web Assembly will now run in multiple experimental browsers \cite{8_wagner_2016}\cite{7_zhu_2016} for example FireFox Nightly. The Web Assembly development process was made public on the 17th of June, 2015 \cite{6_bastien_2016}. 
+Web Assembly is being developed by a W3C community group with members from large organisations like Google, Microsoft and Mozilla \cite{8_wagner_2016}. Their aim for the project is to develop a load time efficient binary format for the web. Wasm should be able to run at native speed and could be used for a compile target for other languages \cite{8_wagner_2016}. The project has three stages of development MVP, after MVP and Future Plans. Currently the project is  at the end of MVP. The latest milestone in the MVP to be completed is that Web Assembly will now run in multiple experimental browsers \cite{8_wagner_2016}\cite{7_zhu_2016} for example FireFox Nightly. To demo this they have implemented a game using C++ that is compile and can run in the browser. The game is fully 3D using OpenGL. The Web Assembly development process was made public on the 17th of June, 2015 \cite{6_bastien_2016}. Web assembly has two formats one is binary (.wasm) and the other is text based (.wast). The developers of Web Assembly already have a way of converting between them. Currently only the binary format can run in the web browser but with the use of an interpretor testing commands can be used to run the $wast$ format. 
 
 \subsection{Design}\label{subsec:wad}
 
@@ -15,7 +15,7 @@ Web Assembly has some imported design features that make it different from other
 %Need to trim the wasm file to make it smaller and simpler.
 \begin{figure}[H]
   \centering
-  \lstinputlisting[frame=L, basicstyle=\footnotesize\ttfamily]{wasm.wast}
+  \lstinputlisting[frame=L,numbers=left, basicstyle=\footnotesize\ttfamily]{wasm.wast}
   \caption{Example Web Assembly}
   \label{fig:wasm}
 \end{figure}
@@ -23,11 +23,12 @@ Web Assembly has some imported design features that make it different from other
 \paragraph{}
 
 %Need a better way to say this.
-Web Assembly does not have a stack or a limited amount registers. Wasm has "locals" similar to registers but with type information associated. These locals need to be created at the start of each function. When created local do not take up memory space on the heap. You can see in the figure above the all locals need to be created at the start of each function.
+Web Assembly does not have a stack or a limited amount registers. Wasm has "locals" similar to registers but with type information associated. These locals need to be created at the start of each function. When created locals do not take up memory space on the heap. You can see in the figure above the all locals need to be created at the start of each function. 
+The above example shows a the set-up of a simple function the checks if a int passed in is greater then 0, if it is return itself else return 0. The code looks complicated because of the unflattering process applied to the WyIL it was compile from. $Blocks$, $loops$ and $if$ bytecodes can be given Labels and example of this in the example above on line 7. In the case of $blocks$ and $ifs$ when you branch to them this is a early exit. This branching can take values with them so a $if$ bytecode can be used inside a $add$ bytecode. For $loops$ branching continues the loop rather than breaks out of it. $Unreachable$ is currently the only error that can be thrown in Web Assembly. In the example above is is used to preserve the fact that in Web Assembly if a node requires a value then the children nodes must return that value. If there is deamed to be a node a compile time that has a path that does not return a value then compilation will fail. So $unreachable$ is used to say this section of code should never be run cutting all paths through that section.
 
 \subsection{Future Plans}\label{subsec:wafp}
 
-The future plan for Web Assembly, after MVP, is to implement a garbage collector. This will means that there is going to be a implementation of reference types for the heap \cite{5_gohman_wagner_bastien_2016}. As well as allowing for interaction with the DOM and other web API functionality \cite{5_gohman_wagner_bastien_2016}. With that JavaScript would also be able to called from with Web Assembly. Other areas to be looked into will be Threading, by implementing shared memory, atomics and futexes (A fast user space Mutex)\cite{12_bastien_wagner_gohman_2016}.
+The future plan for Web Assembly, after MVP, is to implement a garbage collector. This will mean that there is going to be a implementation of reference types for the heap \cite{5_gohman_wagner_bastien_2016}. As well as allowing for interaction with the DOM and other web API functionality \cite{5_gohman_wagner_bastien_2016}. With that JavaScript would also be able to called from with Web Assembly. Other areas to be looked into will be Threading, by implementing shared memory, atomics and futexes (A fast user space Mutex)\cite{12_bastien_wagner_gohman_2016}.
 
 \section{Whiley and WyIL}
 
@@ -39,10 +40,10 @@ Whiley is a programming language developed in Victora University of Wellington's
 
 \paragraph{}
 %Cover more about Whiley types.
-The semantics of Whiley are value semantics. This means that when an array is assigned to a new variable. These variables are then pointing to two different arrays. Values semantics are applied to every type in Whiley. However there is an option to specify the use of reference semantics. When modifying an array or record in Whiley you know if its possible that this change will affect other areas. This is an important feature then developing errorless code.%Remove last statement as there is no evedence provide about this.
+The semantics of Whiley are value semantics. This means that when an array is assigned to a new variable. These variables are then pointing to two different arrays. Values semantics are applied to every type in Whiley. There is a option to get a reference to a location in memory, this allows multiple pointer to the same location. When modifying an array or record in Whiley you know if its possible that this change will affect other areas due to the explicit nature of getting references and there type. This is an important feature then developing error-less code.%Remove last statement as there is no evedence provide about this.
 
 \paragraph{}
-Whiley's type system has basic types like int, bool and array, as well as more advance types Unions and Recursive types. An example of union types is featured bellow.
+Whiley's type system has basic types like int, bool and array, as well as more advanced types Unions and Recursive types. An example of union types is featured bellow.
 %Look at the quoted example and label the types.
 \begin{figure}[H]
   \centering
@@ -53,12 +54,14 @@ Whiley's type system has basic types like int, bool and array, as well as more a
 
 %Add some more discution about the above data.
 
+In the above code $Int | Null$ is considered to be both a Int and Null and will require type checking to use its value.
+
 \subsection{WyIL}
 
-WyIL is Whileys intermediary language. Whiley's source is compiled into this before being targeted to any specific compile target for example Java bytecode. WyIL is a simi-structured language \cite{1_pearce_2016} which means, that loops and if statements have been flattened out and implemented with labels and goto statements. Instructions in WyIL are register based bytecodes \cite{1_pearce_2016} rather than stack based. This makes it easier when compiling to Web Assembly as it has similar syntax, see section \ref{subsec:wad}. The advantages of using WyIL over Whiley source to compile from are all types and names have been resolved \cite{1_pearce_2016} as well as verification.
+WyIL is Whileys intermediary language. Whiley's source is compiled into this before being targeted to any specific compile target for example Java bytecode. WyIL is a simi-structured language \cite{1_pearce_2016} which means that loops and if statements have been flattened out and implemented with labels and goto bytecode. Instructions in WyIL are register based bytecodes \cite{1_pearce_2016} rather than stack based. This makes it easier when compiling to Web Assembly as it has similar syntax, see section \ref{subsec:wad}. The advantages of using WyIL over Whiley source to compile from are all types and names have been resolved \cite{1_pearce_2016} as well as verification.
 
 \paragraph{}
-Taking WyIL and transforming it to another language is easier to do than with Whiley itself. This is because the individual statements are closer to assembly language statements. Statements from Whiley have already been expanded from one line to two lines plus. This can featured in the example below.  
+Taking WyIL and transforming it to another language is easier to do than with Whiley itself. This is because the individual statements are closer to assembly language statements. Statements from Whiley have already been expanded from one line to a sequence of bytecodes that are equivalent. This can be seen below.  
 
 \paragraph{}
 
@@ -70,6 +73,10 @@ Taking WyIL and transforming it to another language is easier to do than with Wh
 \end{figure}
 
 %Discution about the implementation needs to be expanded.
-Each statement in WyIl stores type infromation. This information is for keeping the integrity of the type system.
+Each statement in WyIl stores type infromation. This information is for keeping the integrity of the type system. This can be seen in the example above that uses the $lengthof$ bytecode where it only take a $int[]$ type. Each bytecode that interacts with a register has a type associated with it ether related to an input value or an output value. An example of a input value is $lengthof$ as the return value for this is an $int$, while and example of output is $const$ as the output value is a $null$ in this case. The above example also show the flattening out of a $while$ statement from Figure \ref{fig:whiley}, through the use of the $loop$, $labels$ and $ifge$ bytecodes. In the example the $loop$ bytecode will loop through the indented section indefinitely. To escape from the loop checks are made each time against using the $ifge$ bytecode and branching to label10 when the criteria are met. 
+If type bytecodes are types of code that take two values, compare them, then branch to a label that is associated with them. The example above has two $ifge$ and $ifne$. $Ifge$ can only be used with numeric types such as $int$ and is in the same subset as lt, gt, and le if bytecodes. $Ifne$ can be used with any type and is in the same subset of $ifeq$ for that reason and is used to equality or not of values of the same type. The last if type is $ifis$ this is used for runtime type checking and would have been present in the example above if a function had called and tried to use the value from the $indexOf$ function. 
+Records in WyIL are of the from "$\{int\ n1, bool\ n2\}$". The type of this record takes into account the field names. This means that $\{int\ n2, bool\ n1\}$ and $\{int\ n1, bool\ n2\}$ have different types. The bytecode for accessing and creation store assume and enforce lexical ordering for a records fields.
+When working with WyIL and Web Assembly it is impotent to note that WyIL dose not have to create registers and Web Assembly does. In the example above you can see that registers are just used when needed and not reused (in the sense that they are not reused for a different set of commutations). In Web Assembly registers (locals) are created at the start of each function and are explicate to that function, this can be seen in Figure \ref{fig:wasm} and mentioned in Subsection \ref{subsec:wad}. 
+
 
 
